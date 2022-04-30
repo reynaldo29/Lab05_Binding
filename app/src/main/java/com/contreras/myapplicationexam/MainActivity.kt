@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.contreras.myapplicationexam.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -18,16 +19,23 @@ const val PARAMETER_EXTRA_DIRECCION2 = "direccion"
 const val PARAMETER_EXTRA_TELEFONO2 = "telefono"
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding:ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding= ActivityMainBinding.inflate(layoutInflater)
+        val view=binding.root
+        setContentView(view)
+
     }
 
     fun sendExplicit(view: android.view.View) {
-        val nombre = tvNombre.text.toString()
-        val correo = tvCorreo.text.toString()
-        val direccion = tvDireccion.text.toString()
-        val telefono = tvTelefono.text.toString()
+
+        val nombre = binding.tvNombre.text.toString()
+        val correo = binding.tvCorreo.text.toString()
+        val direccion =binding.tvDireccion.text.toString()
+        val telefono =binding.tvTelefono.text.toString()
 
         validateInputFields(nombre, correo, direccion, telefono)
         goDetailActivity(nombre, correo, direccion, telefono)
@@ -74,18 +82,18 @@ class MainActivity : AppCompatActivity() {
                 val extras = data?.extras
                 if (extras != null) {
                     if (extras.get(PARAMETER_EXTRA_NOMBRE2) != null) {
-                        tvNombre.setText(extras.getString(PARAMETER_EXTRA_NOMBRE2))
+                        binding.tvNombre.setText(extras.getString(PARAMETER_EXTRA_NOMBRE2))
                     }
 
                     if (extras.get(PARAMETER_EXTRA_CORREO2) != null) {
-                        tvCorreo.setText(extras.getString(PARAMETER_EXTRA_CORREO2))
+                        binding.tvCorreo.setText(extras.getString(PARAMETER_EXTRA_CORREO2))
                     }
 
                     if (extras.get(PARAMETER_EXTRA_DIRECCION2) != null) {
-                        tvDireccion.setText(extras.getString(PARAMETER_EXTRA_DIRECCION2))
+                        binding.tvDireccion.setText(extras.getString(PARAMETER_EXTRA_DIRECCION2))
                     }
                     if (extras.get(PARAMETER_EXTRA_TELEFONO2) != null) {
-                        tvTelefono.setText(extras.getString(PARAMETER_EXTRA_TELEFONO2))
+                        binding.tvTelefono.setText(extras.getString(PARAMETER_EXTRA_TELEFONO2))
                     }
                 }
             }
@@ -94,14 +102,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun callPhone(view: View) {
-        val phone = tvTelefono.text.toString()
+        val phone = binding.tvTelefono.text.toString()
         val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null))
         startActivity(intent)
     }
 
     fun senMessage(view: View) {
-        val nombre = tvNombre.text.toString()
-        val telefono = tvTelefono.text.toString()
+        val nombre = binding.tvNombre.text.toString()
+        val telefono = binding.tvTelefono.text.toString()
 
         val uri = Uri.parse("smsto:$telefono")
         val it = Intent(Intent.ACTION_SENDTO, uri)
@@ -113,7 +121,7 @@ class MainActivity : AppCompatActivity() {
     fun sentWatssap(view: View) {
         try {
             val text = "Quiero comunicarme contigo"
-            val telefono = tvTelefono.text.toString()
+            val telefono = binding.tvTelefono.text.toString()
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse("http://api.whatsapp.com/send?phone=$telefono&text=$text%22")
             startActivity(intent)
